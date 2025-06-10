@@ -10,9 +10,8 @@ df  = df[(df["IsSpeedDropValid"]==1) &
           (df["IsApparentSlipValid"]==1) &
           (df["IsDeltaNpropValid"]==1) &
           (df["IsDeltaPDOnSpeedValid"]==1) &
-          (df["IsDeltaFOCMEValid"]==1) & 
-          (df["MEFOCDeviation"] >= 0) &
-          (df["MEFOCDeviation"] <= 100) ]
+          (df["IsDeltaFOCMEValid"]==1) 
+           ]
 
 # --- Preprocess: Convert date column ---
 df['StartDateUTC'] = pd.to_datetime(df['StartDateUTC'])
@@ -23,6 +22,8 @@ st.sidebar.header("Filters")
 # Column selection
 value_columns = ['MEFOCDeviation', 'PwrDlvrDevOnSpeed', 'SpeedDrop', 'ApparentSlip', 'RPMDeviation', 'ISOSFOCDeviation']  # <-- update this list as needed
 selected_column = st.sidebar.selectbox("Select column to display", value_columns)
+
+df = df[(df[selected_column]>=0) & (df[selected_column]<=100)]  # Filter to keep values between 0 and 100
 
 # StartDateUTC filter
 # StartDateUTC filter with separate inputs
