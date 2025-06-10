@@ -15,11 +15,14 @@ st.sidebar.header("Filters")
 value_columns = ['MEFOCDeviation', 'PwrDlvrDevOnSpeed', 'SpeedDrop', 'ApparentSlip', 'RPMDeviation', 'ISOSFOCDeviation']  # <-- update this list as needed
 selected_column = st.sidebar.selectbox("Select column to display", value_columns)
 
-# # StartDateUTC filter
-# min_date = df['StartDateUTC'].min()
-# max_date = df['StartDateUTC'].max()
-# start_date, end_date = st.sidebar.date_input("Select date range", [min_date, max_date], min_value=min_date, max_value=max_date)
-# df = df[(df['StartDateUTC'] >= pd.to_datetime(start_date)) & (df['StartDateUTC'] <= pd.to_datetime(end_date))]
+# StartDateUTC filter
+# StartDateUTC filter with separate inputs
+min_date = df['StartDateUTC'].min().date()
+max_date = df['StartDateUTC'].max().date()
+start_date = st.sidebar.date_input("Start Date", min_date, min_value=min_date, max_value=max_date)
+end_date = st.sidebar.date_input("End Date", max_date, min_value=min_date, max_value=max_date)
+df = df[(df['StartDateUTC'] >= pd.to_datetime(start_date)) & (df['StartDateUTC'] <= pd.to_datetime(end_date))]
+
 
 # # Beaufort scale filter
 # bfscale_options = sorted(df['BFScale'].dropna().unique())
@@ -27,48 +30,79 @@ selected_column = st.sidebar.selectbox("Select column to display", value_columns
 # df = df[df['BFScale'].isin(selected_bfscale)]
 
 # --- Dynamic Advanced Filters ---
-operators = {
-    '=': lambda a, b: a == b,
-    '!=': lambda a, b: a != b,
-    '<': lambda a, b: a < b,
-    '<=': lambda a, b: a <= b,
-    '>': lambda a, b: a > b,
-    '>=': lambda a, b: a >= b
-}
+# operators = {
+#     '=': lambda a, b: a == b,
+#     '!=': lambda a, b: a != b,
+#     '<': lambda a, b: a < b,
+#     '<=': lambda a, b: a <= b,
+#     '>': lambda a, b: a > b,
+#     '>=': lambda a, b: a >= b
+# }
 
-filter_columns = st.sidebar.multiselect("Choose columns to filter", df.columns)
+# filter_columns = st.sidebar.multiselect("Choose columns to filter", df.columns)
 
-for col in filter_columns:
-    if f"{col}_conditions" not in st.session_state:
-        st.session_state[f"{col}_conditions"] = 1
+# for col in filter_columns:
+#     if f"{col}_conditions" not in st.session_state:
+#         st.session_state[f"{col}_conditions"] = 1
 
-    st.sidebar.markdown(f"### Filters for {col}")
+#     st.sidebar.markdown(f"### Filters for {col}")
 
-    for i in range(st.session_state[f"{col}_conditions"]):
-        op = st.sidebar.selectbox(f"{col} - Condition {i+1} Operator", list(operators.keys()), key=f"{col}_op_{i}")
+#     for i in range(st.session_state[f"{col}_conditions"]):
+#         op = st.sidebar.selectbox(f"{col} - Condition {i+1} Operator", list(operators.keys()), key=f"{col}_op_{i}")
 
-        if pd.api.types.is_numeric_dtype(df[col]):
-            val = st.sidebar.number_input(f"{col} - Value {i+1}", key=f"{col}_val_{i}")
-        elif pd.api.types.is_datetime64_any_dtype(df[col]):
-            val = st.sidebar.date_input(f"{col} - Date {i+1}", key=f"{col}_val_{i}")
-            # Convert date to datetime for comparison
-            val = pd.to_datetime(val)
-        else:
-            val = st.sidebar.text_input(f"{col} - Value {i+1}", key=f"{col}_val_{i}")
+#         if pd.api.types.is_numeric_dtype(df[col]):
+#             val = st.sidebar.number_input(f"{col} - Value {i+1}", key=f"{col}_val_{i}")
+#         elif pd.api.types.is_datetime64_any_dtype(df[col]):
+#             val = st.sidebar.date_input(f"{col} - Date {i+1}", key=f"{col}_val_{i}")
+#             # Convert date to datetime for comparison
+#             val = pd.to_datetime(val)
+#         else:
+#             val = st.sidebar.text_input(f"{col} - Value {i+1}", key=f"{col}_val_{i}")
 
-        # Apply filter
-        try:
-            df = df[operators[op](df[col], val)]
-        except Exception as e:
-            st.warning(f"Error applying filter on {col}: {e}")
+#         # Apply filter
+#         try:
+#             df = df[operators[op](df[col], val)]
+#         except Exception as e:
+#             st.warning(f"Error applying filter on {col}: {e}")
 
-    if st.sidebar.button(f"➕ Add another condition for {col}", key=f"{col}_add_btn"):
-        st.session_state[f"{col}_conditions"] += 1
+#     if st.sidebar.button(f"➕ Add another condition for {col}", key=f"{col}_add_btn"):
+#         st.session_state[f"{col}_conditions"] += 1
 
 # Vessel filter
-vessels = df['VesselId'].unique()
-selected_vessel = st.sidebar.selectbox("Select Vessel", vessels)
-filtered_df = df[df['VesselId'] == selected_vessel].copy()
+# Vessel names mapping
+vessel_names = {
+    1023: "MH Perseus",
+    1005: "PISCES", 
+    1007: "CAPELLA",
+    1017: "CETUS",
+    1004: "CASSIOPEIA",
+    1021: "PYXIS",
+    1032: "Cenataurus",
+    1016: "CHARA",
+    1018: "CARINA"
+}
+
+# Get unique vessel IDs and create display options
+vessel_ids = df['VesselId'].unique()
+vessel_options = [vessel_names.get(vid, f"Unknown ({vid})") for vid in vessel_ids]
+
+# Create selectbox with vessel names
+selected_vessel_name = st.sidebar.selectbox("Select Vessel", vessel_options)
+
+# Get the corresponding vessel ID
+selected_vessel_id = None
+for vid, name in vessel_names.items():
+    if name == selected_vessel_name:
+        selected_vessel_id = vid
+        break
+
+# If it's an unknown vessel, extract ID from the display string
+if selected_vessel_id is None:
+    if "Unknown (" in selected_vessel_name:
+        selected_vessel_id = int(selected_vessel_name.split("(")[1].split(")")[0])
+
+# Filter dataframe
+filtered_df = df[df['VesselId'] == selected_vessel_id].copy()
 
 # --- Create Bins ---
 filtered_df['DraftBin'] = np.floor(filtered_df['MeanDraft'] * 2) / 2
