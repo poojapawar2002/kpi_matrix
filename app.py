@@ -101,6 +101,7 @@ for draft in draft_labels:
             matrix[draft][speed] = None
 
 # --- Display Matrix ---
+# --- Display Matrix ---
 st.markdown(f"<h4 style='text-align: center;'>Matrix of {selected_column} (Average + Count)</h4>", unsafe_allow_html=True)
 
 # Header
@@ -129,12 +130,107 @@ for draft in draft_labels:
     row += "</tr>"
     body_html += row
 
-# Final Table
+# Final Table with centering div
 table_html = f"""
-<table style='border-collapse: collapse; width: 100%; table-layout: auto;'>
-    <thead style='background-color: #f0f0f0;'>{header_html}</thead>
-    <tbody>{body_html}</tbody>
-</table>
+<div style='display: flex; justify-content: center; width: 100%;'>
+    <table style='border-collapse: collapse; table-layout: auto;'>
+        <thead style='background-color: #f0f0f0;'>{header_html}</thead>
+        <tbody>{body_html}</tbody>
+    </table>
+</div>
+"""
+
+st.markdown(table_html, unsafe_allow_html=True)
+
+# ================================================================
+# Option 3: Push to Left Side
+# Replace your table display section with this:
+
+# --- Display Matrix ---
+st.markdown(f"<h4 style='text-align: left;'>Matrix of {selected_column} (Average + Count)</h4>", unsafe_allow_html=True)
+
+# Use columns with different ratios
+col1, col2 = st.columns([3, 1])  # More space for content, less for right margin
+
+with col1:
+    # Header
+    header_html = "<tr><th style='white-space: nowrap;'>Draft ↓ / Speed →</th>"
+    for speed in speed_labels:
+        header_html += f"<th style='padding: 10px; text-align: center; white-space: nowrap;'>{speed}</th>"
+    header_html += "</tr>"
+
+    # Body
+    body_html = ""
+    for draft in draft_labels:
+        row = f"<tr><td style='padding: 6px; font-weight: bold; white-space: nowrap;'>{draft}</td>"
+        for speed in speed_labels:
+            cell = matrix[draft].get(speed)
+            if cell:
+                avg, cnt = cell
+                html = f"""
+                <div style='text-align: center;'>
+                    <div style='font-size: 16px; font-weight: bold;'>{avg}</div>
+                    <div style='background-color: #007bff; color: white; border-radius: 50%; width: 24px; height: 24px; display: inline-block; line-height: 24px; font-size: 12px;'>{cnt}</div>
+                </div>
+                """
+            else:
+                html = "<div style='text-align: center; color: #bbb;'>—</div>"
+            row += f"<td style='padding: 8px;'>{html}</td>"
+        row += "</tr>"
+        body_html += row
+
+    # Final Table
+    table_html = f"""
+    <table style='border-collapse: collapse; width: 100%; table-layout: auto;'>
+        <thead style='background-color: #f0f0f0;'>{header_html}</thead>
+        <tbody>{body_html}</tbody>
+    </table>
+    """
+    
+    st.markdown(table_html, unsafe_allow_html=True)
+
+# ================================================================
+# Option 4: Fine-tune positioning with custom CSS margins
+# Replace your table display section with this:
+
+# --- Display Matrix ---
+st.markdown(f"<h4 style='text-align: center;'>Matrix of {selected_column} (Average + Count)</h4>", unsafe_allow_html=True)
+
+# Header
+header_html = "<tr><th style='white-space: nowrap;'>Draft ↓ / Speed →</th>"
+for speed in speed_labels:
+    header_html += f"<th style='padding: 10px; text-align: center; white-space: nowrap;'>{speed}</th>"
+header_html += "</tr>"
+
+# Body
+body_html = ""
+for draft in draft_labels:
+    row = f"<tr><td style='padding: 6px; font-weight: bold; white-space: nowrap;'>{draft}</td>"
+    for speed in speed_labels:
+        cell = matrix[draft].get(speed)
+        if cell:
+            avg, cnt = cell
+            html = f"""
+            <div style='text-align: center;'>
+                <div style='font-size: 16px; font-weight: bold;'>{avg}</div>
+                <div style='background-color: #007bff; color: white; border-radius: 50%; width: 24px; height: 24px; display: inline-block; line-height: 24px; font-size: 12px;'>{cnt}</div>
+            </div>
+            """
+        else:
+            html = "<div style='text-align: center; color: #bbb;'>—</div>"
+        row += f"<td style='padding: 8px;'>{html}</td>"
+    row += "</tr>"
+    body_html += row
+
+# Final Table with custom margins
+# Adjust margin-left and margin-right values as needed
+table_html = f"""
+<div style='margin-left: 50px; margin-right: auto; width: fit-content;'>
+    <table style='border-collapse: collapse; table-layout: auto;'>
+        <thead style='background-color: #f0f0f0;'>{header_html}</thead>
+        <tbody>{body_html}</tbody>
+    </table>
+</div>
 """
 
 st.markdown(table_html, unsafe_allow_html=True)
