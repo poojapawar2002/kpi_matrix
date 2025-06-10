@@ -5,6 +5,15 @@ import numpy as np
 # --- Load Data ---
 df = pd.read_csv('combined_output_merged_input_nanremoved.csv')
 
+
+df  = df[(df["IsSpeedDropValid"]==1) & 
+          (df["IsApparentSlipValid"]==1) &
+          (df["IsDeltaNpropValid"]==1) &
+          (df["IsDeltaPDOnSpeedValid"]==1) &
+          (df["IsDeltaFOCMEValid"]==1) & 
+          (df["MEFOCDeviation"] >= 0) &
+          (df["MEFOCDeviation"] <= 100) ]
+
 # --- Preprocess: Convert date column ---
 df['StartDateUTC'] = pd.to_datetime(df['StartDateUTC'])
 
