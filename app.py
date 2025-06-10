@@ -134,7 +134,7 @@ for draft in draft_labels:
 table_html = f"""
 <div style='display: flex; justify-content: center; width: 100%;'>
     <table style='border-collapse: collapse; table-layout: auto;'>
-        <thead style='background-color: #f0f0f0;'>{header_html}</thead>
+        <thead>{header_html}</thead>
         <tbody>{body_html}</tbody>
     </table>
 </div>
