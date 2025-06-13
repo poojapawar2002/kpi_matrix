@@ -575,7 +575,7 @@ else:
     col_matrix, col_plot = st.columns([2.5, 1.5])
     
     with col_matrix:
-        st.markdown(f"<h5 style='text-align: center;'>Comparison Matrix of {selected_column}</h5>", unsafe_allow_html=True)
+        st.markdown(f"<h5 style='text-align: center;'>Comparison Matrix of {selected_column} (%)</h5>", unsafe_allow_html=True)
         st.markdown(f"<p style='text-align: center; font-size: 10px;'>Range 1: {start_date_1} to {end_date_1}<br>Range 2: {start_date_2} to {end_date_2}</p>", unsafe_allow_html=True)
         
         # Header
