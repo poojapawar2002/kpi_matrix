@@ -478,7 +478,7 @@ if mode == "Normal":
         # Body
         body_html = ""
         for draft in draft_labels:
-            row = f"<tr><td style='padding: 3px; font-weight: bold; white-space: nowrap; background-color: #f0f0f0; font-size: 10px;'>{draft}</td>"
+            row = f"<tr><td style='padding: 3px; font-weight: bold; white-space: nowrap; background-color: white; font-size: 10px;'>{draft}</td>"
             
             for speed in speed_labels:
                 cell = matrix[draft].get(speed)
@@ -587,7 +587,7 @@ else:
         # Body
         body_html = ""
         for draft in draft_labels:
-            row = f"<tr><td style='padding: 3px; font-weight: bold; white-space: nowrap; background-color: #f0f0f0; font-size: 10px;'>{draft}</td>"
+            row = f"<tr><td style='padding: 3px; font-weight: bold; white-space: nowrap; background-color: white; font-size: 10px;'>{draft}</td>"
             for speed in speed_labels:
                 cell1 = matrix1[draft].get(speed)
                 cell2 = matrix2[draft].get(speed)
