@@ -38,12 +38,12 @@ if mode == "Normal":
 else:
     # Two date ranges for comparison mode
     st.sidebar.markdown("### Date Range 1")
-    start_date_1 = st.sidebar.date_input("Start Date 1", min_date, min_value=min_date, max_value=max_date, key="start1")
-    end_date_1 = st.sidebar.date_input("End Date 1", max_date, min_value=min_date, max_value=max_date, key="end1")
+    start_date_1 = st.sidebar.date_input("Start Date", min_date, min_value=min_date, max_value=max_date, key="start1")
+    end_date_1 = st.sidebar.date_input("End Date", max_date, min_value=min_date, max_value=max_date, key="end1")
     
     st.sidebar.markdown("### Date Range 2")
-    start_date_2 = st.sidebar.date_input("Start Date 2", min_date, min_value=min_date, max_value=max_date, key="start2")
-    end_date_2 = st.sidebar.date_input("End Date 2", max_date, min_value=min_date, max_value=max_date, key="end2")
+    start_date_2 = st.sidebar.date_input("Start Date", min_date, min_value=min_date, max_value=max_date, key="start2")
+    end_date_2 = st.sidebar.date_input("End Date", max_date, min_value=min_date, max_value=max_date, key="end2")
     
     # Filter data for both date ranges
     df_range1 = df[(df['StartDateUTC'] >= pd.to_datetime(start_date_1)) & (df['StartDateUTC'] <= pd.to_datetime(end_date_1))]
@@ -195,7 +195,7 @@ else:
     matrix2 = create_matrix(pivot2, draft_labels, speed_labels)
     
     # Display comparison matrix
-    st.markdown(f"<h4 style='text-align: center;'>Comparison Matrix of {selected_column} (%)</h4>", unsafe_allow_html=True)
+    st.markdown(f"<h4 style='text-align: center;'>Comparison Matrix of {selected_column} (Range 2 - Range 1)</h4>", unsafe_allow_html=True)
     st.markdown(f"<p style='text-align: center;'>Range 1: {start_date_1} to {end_date_1} | Range 2: {start_date_2} to {end_date_2}</p>", unsafe_allow_html=True)
     
     # Header
