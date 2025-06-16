@@ -464,7 +464,7 @@ if mode == "Normal":
     highlight_cells = get_top_cells_to_highlight(matrix, draft_labels, speed_labels, "normal")
     
     # Create main layout with matrix and scatterplot side by side
-    col_matrix, col_plot = st.columns([2.5, 1.5])
+    col_matrix, col_plot = st.columns([2.8, 1.2])
     
     with col_matrix:
         st.markdown(f"<h5 style='text-align: center;'>Matrix of {selected_column} (%)</h5>", unsafe_allow_html=True)
@@ -573,7 +573,7 @@ else:
     highlight_cells = get_top_cells_to_highlight_comparison(matrix1, matrix2, draft_labels, speed_labels)
     
     # Create main layout with matrix and scatterplot side by side
-    col_matrix, col_plot = st.columns([2.5, 1.5])
+    col_matrix, col_plot = st.columns([2.8, 1.2])
     
     with col_matrix:
         st.markdown(f"<h5 style='text-align: center;'>Comparison Matrix of {selected_column} (%)</h5>", unsafe_allow_html=True)
