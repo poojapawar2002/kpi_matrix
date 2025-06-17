@@ -1,4 +1,5 @@
 import streamlit as st
+import pymongo
 import pandas as pd
 import numpy as np
 import plotly.express as px
@@ -8,7 +9,15 @@ from sklearn.linear_model import LinearRegression
 st.set_page_config(layout="wide")
 
 # --- Load Data ---
-df = pd.read_csv('combined_output_merged_input_nanremoved.csv')
+
+mongo_url = st.secrets["mongo"]["uri"]
+client = pymongo.MongoClient(mongo_url)
+db = client['seaker_data']
+collection = db['combined_output_merged_input_nanremoved']
+df = pd.DataFrame(list(collection.find()))
+df.drop(columns=['_id'], inplace=True)
+
+# df = pd.read_csv('combined_output_merged_input_nanremoved.csv')
 
 df = df[(df["IsSpeedDropValid"]==1) & 
         (df["IsApparentSlipValid"]==1) &
