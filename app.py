@@ -48,7 +48,7 @@ df = df[(df["IsSpeedDropValid"]==1) &
         (df["IsDeltaFOCMEValid"]==1)]
 
 # --- Preprocess: Convert date column ---
-df['StartDateUTC'] = pd.to_datetime(df['StartDateUTC'])
+df['StartDateUTC'] = pd.to_datetime(df['StartDateUTC'], format = "%d-%m-%Y %H:%M")
 
 # --- Initialize session state ---
 if 'selected_draft' not in st.session_state:
@@ -78,7 +78,7 @@ if mode == "Normal":
     # Single date range for normal mode
     start_date = st.sidebar.date_input("Start Date", min_date, min_value=min_date, max_value=max_date)
     end_date = st.sidebar.date_input("End Date", max_date, min_value=min_date, max_value=max_date)
-    df_filtered = df[(df['StartDateUTC'] >= pd.to_datetime(start_date)) & (df['StartDateUTC'] <= pd.to_datetime(end_date))]
+    df_filtered = df[(df['StartDateUTC'] >= pd.to_datetime(start_date,format = "%d-%m-%Y %H:%M")) & (df['StartDateUTC'] <= pd.to_datetime(end_date, format = "%d-%m-%Y %H:%M"))]
 else:
     # Two date ranges for comparison mode
     st.sidebar.markdown("### Date Range 1")
@@ -90,8 +90,8 @@ else:
     end_date_2 = st.sidebar.date_input("End Date", max_date, min_value=min_date, max_value=max_date, key="end2")
     
     # Filter data for both date ranges
-    df_range1 = df[(df['StartDateUTC'] >= pd.to_datetime(start_date_1)) & (df['StartDateUTC'] <= pd.to_datetime(end_date_1))]
-    df_range2 = df[(df['StartDateUTC'] >= pd.to_datetime(start_date_2)) & (df['StartDateUTC'] <= pd.to_datetime(end_date_2))]
+    df_range1 = df[(df['StartDateUTC'] >= pd.to_datetime(start_date_1,format = "%d-%m-%Y %H:%M")) & (df['StartDateUTC'] <= pd.to_datetime(end_date_1, format = "%d-%m-%Y %H:%M"))]
+    df_range2 = df[(df['StartDateUTC'] >= pd.to_datetime(start_date_2,format = "%d-%m-%Y %H:%M")) & (df['StartDateUTC'] <= pd.to_datetime(end_date_2, format = "%d-%m-%Y %H:%M"))]
 
 # Vessel filter
 vessel_names = {
