@@ -10,14 +10,14 @@ st.set_page_config(layout="wide")
 
 # --- Load Data ---
 
-# mongo_url = st.secrets["mongo"]["uri"]
-# client = pymongo.MongoClient(mongo_url)
-# db = client['seaker_data']
-# collection = db['combined_output_merged_input_nanremoved']
-# df = pd.DataFrame(list(collection.find()))
-# df.drop(columns=['_id'], inplace=True)
+mongo_url = st.secrets["mongo"]["uri"]
+client = pymongo.MongoClient(mongo_url)
+db = client['seaker_data']
+collection = db['combined_output_merged_input_nanremoved']
+df = pd.DataFrame(list(collection.find()))
+df.drop(columns=['_id'], inplace=True)
 
-df = pd.read_csv('combined_output_merged_input_nanremoved.csv')
+# df = pd.read_csv('combined_output_merged_input_nanremoved.csv')
 
 needed_columns = ["IsSpeedDropValid",
 "IsApparentSlipValid",
